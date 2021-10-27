@@ -9,24 +9,378 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Student Survey
+```{r}
+library(ggplot2)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# read data
+student <- read.csv('/Users/feiyasuo/Documents/GitHub/consulting-project-pandemic-survey/student.csv')
+faculty <- read.csv('/Users/feiyasuo/Documents/GitHub/consulting-project-pandemic-survey/faculty.csv')
 ```
+
+## Student Survey
+### 1. Bar graph with 95% confidence interval
+#### Question 1: For your preclinical education, what is your preferred mode of learning?
+
+```{r}
+student_q1 <- data.frame(table(student[student$q1!='',]$q1)[-1])
+student_q1$prop <- student_q1$Freq/sum(student_q1$Freq)
+student_q1$sd <- sqrt(student_q1$prop*(1-student_q1$prop)*student_q1$Freq)
+
+ggplot(student_q1) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q1: Preferred Mode of Learning") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 2: What is your preferred method of accessing lecture material?
+
+```{r}
+student_q2 <- data.frame(table(student[student$q2!='',]$q2))
+student_q2 <- student_q2[-1,]
+student_q2$prop <- student_q2$Freq/sum(student_q2$Freq)
+student_q2$sd <- sqrt(student_q2$prop*(1-student_q2$prop)*student_q2$Freq)
+
+ggplot(student_q2) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q2: Preferred Method of Accessing Lecture Material") +
+  xlab("") +
+  coord_flip()
+```
+#### Question 3: How often will you attend in-person lectures when offered?
+```{r}
+student_q3 <- data.frame(table(student[student$q3!='',]$q3))
+student_q3 <- student_q3[-1,]
+
+student_q3$prop <- student_q3$Freq/sum(student_q3$Freq)
+student_q3$sd <- sqrt(student_q3$prop*(1-student_q3$prop)*student_q3$Freq)
+
+ggplot(student_q3) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q3: How often will you attend in-person lectures") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 6: How easy was it connecting with other students and faculty in small groups?
+```{r}
+student_q6 <- data.frame(table(student[student$q6!='',]$q6))
+student_q6 <- student_q6[-1,]
+student_q6$Var1 <- factor(student_q6$Var1, levels = c("Very easy", "Easy", 
+                                                      "Neither difficult nor easy", "Difficult",
+                                                      "Very difficult"))
+
+student_q6$prop <- student_q6$Freq/sum(student_q6$Freq)
+student_q6$sd <- sqrt(student_q6$prop*(1-student_q6$prop)*student_q6$Freq)
+
+
+ggplot(student_q6) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q6: connecting with other students and faculty in small groups") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 7: How often did you meet with your small group outside of the assigned time to go over cases?
+```{r}
+student_q7 <- data.frame(table(student[student$q7!='',]$q7))
+student_q7 <- student_q7[-1,]
+student_q7$Var1 <- factor(student_q7$Var1, levels = c("Often", "Sometimes", "Rarely", "Never"))
+
+student_q7$prop <- student_q7$Freq/sum(student_q7$Freq)
+student_q7$sd <- sqrt(student_q7$prop*(1-student_q7$prop)*student_q7$Freq)
+
+ggplot(student_q7) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q7: How often did you meet with your small group?") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 8: The virtual curriculum limited your ability to form social connections with your classmates.
+```{r}
+student_q8 <- data.frame(table(student[student$q8!='',]$q8))
+student_q8 <- student_q8[-1,]
+student_q8$Var1 <- factor(student_q8$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q8$prop <- student_q8$Freq/sum(student_q8$Freq)
+student_q8$sd <- sqrt(student_q8$prop*(1-student_q8$prop)*student_q8$Freq)
+
+ggplot(student_q8) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q8: The virtual curriculum limited your ability to form social connections") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 9: The virtual curriculum affected your ability for self care.
+```{r}
+student_q9 <- data.frame(table(student[student$q9!='',]$q9))
+student_q9 <- student_q9[-1,]
+student_q9$Var1 <- factor(student_q9$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q9$prop <- student_q9$Freq/sum(student_q9$Freq)
+student_q9$sd <- sqrt(student_q9$prop*(1-student_q9$prop)*student_q9$Freq)
+
+ggplot(student_q9) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q9: The virtual curriculum affected your ability for self care") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 10: Replacing clinical week experiences with virtual activities impacted the quality of your clinical skills education.
+```{r}
+student_q10 <- data.frame(table(student[student$q10!='',]$q10))
+student_q10 <- student_q10[-1,]
+student_q10$Var1 <- factor(student_q10$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q10$prop <- student_q10$Freq/sum(student_q10$Freq)
+student_q10$sd <- sqrt(student_q10$prop*(1-student_q10$prop)*student_q10$Freq)
+
+ggplot(student_q10) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q10: Virtual activities impacted the quality of your clinical skills education") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 11: COVID-19 affected the extent of your involvement in community service during pre-clinical years.
+```{r}
+student_q11 <- data.frame(table(student[student$q11!='',]$q11))
+student_q11 <- student_q11[-1,]
+student_q11$Var1 <- factor(student_q11$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q11$prop <- student_q11$Freq/sum(student_q11$Freq)
+student_q11$sd <- sqrt(student_q11$prop*(1-student_q11$prop)*student_q11$Freq)
+
+ggplot(student_q11) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q11: COVID-19 affected the extent of your involvement in community service") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 12: Your choice of specialty will be affected due to virtual versus in-person interactions with instructors, lack of shadowing and research opportunities.
+```{r}
+student_q12 <- data.frame(table(student[student$q12!='',]$q12))
+student_q12 <- student_q12[-1,]
+student_q12$Var1 <- factor(student_q12$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q12$prop <- student_q12$Freq/sum(student_q12$Freq)
+student_q12$sd <- sqrt(student_q12$prop*(1-student_q12$prop)*student_q12$Freq)
+
+ggplot(student_q12) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q12: Your choice of specialty will be affected due to virtual \n versus in-person interactions with instructorsl") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 13: You were able to connect to students in other class years and instructors to identify potential mentors using the Zoom format.
+```{r}
+student_q13 <- data.frame(table(student[student$q13!='',]$q13))
+student_q13 <- student_q13[-1,]
+student_q13$Var1 <- factor(student_q13$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q13$prop <- student_q13$Freq/sum(student_q13$Freq)
+student_q13$sd <- sqrt(student_q13$prop*(1-student_q13$prop)*student_q13$Freq)
+
+ggplot(student_q13) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q13: You were able to connect to students in other class years \n and instructors to identify potential mentors using the Zoom format") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 14: I feel confident that I belong at UNC School of Medicine.
+```{r}
+student_q14 <- data.frame(table(student[student$q14!='',]$q14))
+student_q14 <- student_q14[-1,]
+student_q14$Var1 <- factor(student_q14$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+student_q14$prop <- student_q14$Freq/sum(student_q14$Freq)
+student_q14$sd <- sqrt(student_q14$prop*(1-student_q14$prop)*student_q14$Freq)
+
+ggplot(student_q14) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("q14: I feel confident that I belong at UNC School of Medicine") +
+  xlab("") +
+  coord_flip()
+```
+
+
+### 2. Dependency Table for Questions
+### 1. Bar graph with 95% confidence interval
+#### Question 1: For your preclinical education, what is your preferred mode of teaching?
+```{r}
+faculty_q1 <- data.frame(table(faculty[faculty$q1!='',]$q1))
+faculty_q1$prop <- faculty_q1$Freq/sum(faculty_q1$Freq)
+faculty_q1$sd <- sqrt(faculty_q1$prop*(1-faculty_q1$prop)*faculty_q1$Freq)
+
+ggplot(faculty_q1) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q1: What is your preferred mode of teaching?") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 6: How easy was it connecting with students in small groups over Zoom?
+```{r}
+faculty_q6 <- data.frame(table(faculty[faculty$q6!='',]$q6))
+faculty_q6$Var1 <- factor(faculty_q6$Var1, levels = c("Very easy", "Easy", 
+                                                      "Neither difficult nor easy", "Difficult",
+                                                      "Very difficult"))
+faculty_q6$prop <- faculty_q6$Freq/sum(faculty_q6$Freq)
+faculty_q6$sd <- sqrt(faculty_q6$prop*(1-faculty_q6$prop)*faculty_q6$Freq)
+
+ggplot(faculty_q6) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q6: How easy was it connecting with students in small groups \n over Zoom?") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 9: The virtual curriculum affected your ability for self care.
+```{r}
+faculty_q9 <- data.frame(table(faculty[faculty$q9!='',]$q9))
+faculty_q9 <- faculty_q9[-1,]
+faculty_q9$Var1 <- factor(faculty_q9$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+faculty_q9$prop <- faculty_q9$Freq/sum(faculty_q9$Freq)
+faculty_q9$sd <- sqrt(faculty_q9$prop*(1-faculty_q9$prop)*faculty_q9$Freq)
+
+ggplot(faculty_q9) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q9: The virtual curriculum affected your ability for self care") +
+  xlab("") +
+  coord_flip()
+```
+
+#### Question 12: Your ability to help students explore your speciality was affected by virtual versus inperson interactions with students, lack of shadowing and research opportunities during COVID-19.
+```{r}
+faculty_q12 <- data.frame(table(faculty[faculty$q12!='',]$q12))
+faculty_q12 <- faculty_q12[-1,]
+faculty_q12$Var1 <- factor(faculty_q12$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+faculty_q12$prop <- faculty_q12$Freq/sum(faculty_q12$Freq)
+faculty_q12$sd <- sqrt(faculty_q12$prop*(1-faculty_q12$prop)*faculty_q12$Freq)
+
+ggplot(faculty_q12) +
+  geom_bar(aes(x=Var1, y=Freq), stat="identity", fill="skyblue", alpha=0.5) +
+  geom_errorbar(aes(x=Var1, ymin=Freq-sd*1.96, ymax=Freq+sd*1.96), width=0.4, colour="orange") +
+  ggtitle("Q12: The virtual curriculum affected your ability for self care") +
+  xlab("") +
+  coord_flip()
+```
+
+
+
+
+
+
+
 
 ## Faculty Survey
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ## Dependency between the Two Surveys
+### 1. Grouped Bar Plot on Common Questions
+#### Question 1
+```{r}
+merge_q1 <- rbind(student_q1, faculty_q1[-4,])
+merge_q1$category <- c(rep("student",4), rep("faculty",4))
+merge_q1$sd <- sqrt(merge_q1$prop*(1-merge_q1$prop)/merge_q1$Freq)
+
+ggplot(merge_q1, aes(fill=category, y=prop, x=Var1)) + 
+    geom_bar(position="dodge", stat="identity") +
+    geom_errorbar(aes(x=Var1, ymin=prop-sd*1.96, ymax=prop+sd*1.96),  position = position_dodge(0.95), width=0.4, colour="orange") +
+    ggtitle("Q1: What is your preferred mode of teaching/leanring") +
+    xlab("") + ylab("Proportion") +
+    coord_flip()
+```
+
+#### Question 6: How easy was it connecting with faculty/students in small groups over Zoom?
+```{r}
+merge_q6 <- rbind(student_q6, faculty_q6)
+de<-data.frame("Very difficult",0,0,0)
+names(de)<-c("Var1","Freq", "prop", "sd")
+merge_q6 <- rbind(merge_q6, de)
+merge_q6$category <- c(rep("student",5), rep("faculty",5))
+merge_q6$Var1 <- factor(merge_q6$Var1, levels = c("Very easy", "Easy", 
+                                                      "Neither difficult nor easy", "Difficult",
+                                                      "Very difficult"))
+merge_q6$sd <- sqrt(merge_q6$prop*(1-merge_q6$prop)/merge_q6$Freq)
+
+ggplot(merge_q6, aes(fill=category, y=prop, x=Var1)) + 
+    geom_bar(position="dodge", stat="identity") +
+    geom_errorbar(aes(x=Var1, ymin=prop-sd*1.96, ymax=prop+sd*1.96),  position = position_dodge(0.95), width=0.4, colour="orange") +
+    ggtitle("Q6: How easy was it connecting with faculty/students in small groups over Zoom?") +
+    xlab("") + ylab("Proportion") +
+    coord_flip()
+```
+
+#### Question 9: The virtual curriculum affected your ability for self care.
+```{r}
+merge_q9 <- rbind(student_q9, faculty_q9)
+de<-data.frame("Agree",0,0,0)
+names(de)<-c("Var1","Freq", "prop", "sd")
+merge_q9 <- rbind(merge_q9, de)
+merge_q9$Var1 <- factor(merge_q9$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+merge_q9$category <- c(rep("student",5), rep("faculty",5))
+merge_q9$sd <- sqrt(merge_q9$prop*(1-merge_q9$prop)/merge_q9$Freq)
+
+ggplot(merge_q9, aes(fill=category, y=prop, x=Var1)) + 
+    geom_bar(position="dodge", stat="identity") +
+    geom_errorbar(aes(x=Var1, ymin=prop-sd*1.96, ymax=prop+sd*1.96),  position = position_dodge(0.95), width=0.4, colour="orange") +
+    ggtitle("Q9: The virtual curriculum affected your ability for self care") +
+    xlab("") + ylab("Proportion") +
+    coord_flip()
+```
+
+#### Question 12: Your choice of specialt/your ability to help students explore your speciality was affected by virtual versus inperson interactions with instructors/students, lack of shadowing and research opportunities during COVID-19.
+```{r}
+merge_q12 <- rbind(student_q12, faculty_q12)
+de<-data.frame("Agree",0,0,0)
+names(de)<-c("Var1","Freq", "prop", "sd")
+merge_q12 <- rbind(merge_q12, de)
+merge_q12$Var1 <- factor(merge_q12$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
+                                                      "Disagree", "Strongly disagree"))
+
+merge_q12$category <- c(rep("student",5), rep("faculty",5))
+merge_q12$sd <- sqrt(merge_q12$prop*(1-merge_q12$prop)/merge_q12$Freq)
+
+ggplot(merge_q12, aes(fill=category, y=prop, x=Var1)) + 
+    geom_bar(position="dodge", stat="identity") +
+    geom_errorbar(aes(x=Var1, ymin=prop-sd*1.96, ymax=prop+sd*1.96),  position = position_dodge(0.95), width=0.4, colour="orange") +
+    ggtitle("Q12: Speciality was affected by virtual versus inperson interactions") +
+    xlab("") + ylab("Proportion") +
+    coord_flip()
+```
+

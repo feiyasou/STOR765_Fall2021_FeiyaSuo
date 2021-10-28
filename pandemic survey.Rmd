@@ -11,6 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(ggplot2)
+library(wordcloud)
+library(RColorBrewer)
+library(wordcloud2)
+library(tm)
 
 # read data
 student <- read.csv('/Users/feiyasuo/Documents/GitHub/consulting-project-pandemic-survey/student.csv')
@@ -305,10 +309,110 @@ ggplot(faculty_q12) +
 
 
 
+
+
+
+
+
+
+
+
+
+
+### 2.Word Maps for Open-ended Questions
+#### Question 4: How interactive are lectures using the Zoom format?
+```{r}
+# Retrieving the text data
+student_q4 <- student$q4
+docs <- Corpus(VectorSource(student_q4))
+
+# Clean the text data
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# Create a document-term-matrix
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+df <- df[-1,]
+
+# Generate the word cloud
+set.seed(1234) # for reproducibility 
+wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, 
+          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+```
+#### Question 5: How was the small group experience using the Zoom format?
+```{r}
+# Retrieving the text data
+student_q5 <- student$q5
+docs <- Corpus(VectorSource(student_q5))
+
+# Clean the text data
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# Create a document-term-matrix
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+df <- df[c(-1,-3,-4),]
+
+# Generate the word cloud
+set.seed(1234) # for reproducibility 
+wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, 
+          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+```
+
+#### Question 15: If you did not feel a sense of belonging, please explain further
+```{r}
+# Retrieving the text data
+student_q15 <- student$q15
+docs <- Corpus(VectorSource(student_q15))
+
+# Clean the text data
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# Create a document-term-matrix
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+
+# Generate the word cloud
+set.seed(1234) # for reproducibility 
+wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, 
+          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Faculty Survey
-
-
-## Dependency between the Two Surveys
 ### 1. Grouped Bar Plot on Common Questions
 #### Question 1
 ```{r}
@@ -384,3 +488,99 @@ ggplot(merge_q12, aes(fill=category, y=prop, x=Var1)) +
     coord_flip()
 ```
 
+### 2.Word Maps for Open-ended Questions
+#### Question 4: How interactive are lectures using the Zoom format?
+```{r}
+# Retrieving the text data
+faculty_q4 <- faculty$q4
+docs <- Corpus(VectorSource(faculty_q4))
+
+# Clean the text data
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# Create a document-term-matrix
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+df <- df[-1,]
+
+# Generate the word cloud
+set.seed(1234) # for reproducibility 
+wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, 
+          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+```
+
+#### Question 12: If you felt that the ability to help students explore your specialty was affected, please explain further
+```{r}
+# Retrieving the text data
+faculty_q12 <- faculty$q12_explain
+docs <- Corpus(VectorSource(faculty_q12))
+
+# Clean the text data
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# Create a document-term-matrix
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+
+# Generate the word cloud
+set.seed(1234) # for reproducibility 
+wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, 
+          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+```
+
+#### Question 16: Other comments
+```{r}
+# Retrieving the text data
+faculty_q16 <- faculty$q16
+docs <- Corpus(VectorSource(faculty_q16))
+
+# Clean the text data
+docs <- docs %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeWords, stopwords("english"))
+
+# Create a document-term-matrix
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+
+# Generate the word cloud
+set.seed(1234) # for reproducibility 
+wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.order=FALSE, 
+          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Dependency between the Two Surveys

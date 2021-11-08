@@ -15,7 +15,7 @@ library(wordcloud2)
 library(tm)
 ```
 
-```{r}
+```{r, warning = FALSE}
 # read data
 student <- read.csv('/Users/feiyasuo/Documents/GitHub/consulting-project-pandemic-survey/student.csv')
 faculty <- read.csv('/Users/feiyasuo/Documents/GitHub/consulting-project-pandemic-survey/faculty.csv')
@@ -23,9 +23,11 @@ faculty <- read.csv('/Users/feiyasuo/Documents/GitHub/consulting-project-pandemi
 
 ## Student Survey
 ### 1. Bar graph with 95% confidence interval
+In this section, I analyze multiple-choice questions in the survey. The figures show the count for each option with a 95% confidence interval. If the confidence intervals of any two bars do not overlap, it indicates that the numbers of respondents choosing the two options are significantly different.
+
 #### Question 1: For your preclinical education, what is your preferred mode of learning?
 
-```{r}
+```{r, warning = FALSE}
 student_q1 <- data.frame(table(student[student$q1!='',]$q1)[-1])
 student_q1$prop <- student_q1$Freq/sum(student_q1$Freq)
 student_q1$sd <- sqrt(student_q1$prop*(1-student_q1$prop)*student_q1$Freq)
@@ -40,7 +42,7 @@ ggplot(student_q1) +
 
 #### Question 2: What is your preferred method of accessing lecture material?
 
-```{r}
+```{r, warning = FALSE}
 student_q2 <- data.frame(table(student[student$q2!='',]$q2))
 student_q2 <- student_q2[-1,]
 student_q2$prop <- student_q2$Freq/sum(student_q2$Freq)
@@ -55,7 +57,7 @@ ggplot(student_q2) +
 ```
 
 #### Question 3: How often will you attend in-person lectures when offered?
-```{r}
+```{r, warning = FALSE}
 student_q3 <- data.frame(table(student[student$q3!='',]$q3))
 student_q3 <- student_q3[-1,]
 
@@ -71,7 +73,7 @@ ggplot(student_q3) +
 ```
 
 #### Question 6: How easy was it connecting with other students and faculty in small groups?
-```{r}
+```{r, warning = FALSE}
 student_q6 <- data.frame(table(student[student$q6!='',]$q6))
 student_q6 <- student_q6[-1,]
 student_q6$Var1 <- factor(student_q6$Var1, levels = c("Very easy", "Easy", 
@@ -91,7 +93,7 @@ ggplot(student_q6) +
 ```
 
 #### Question 7: How often did you meet with your small group outside of the assigned time to go over cases?
-```{r}
+```{r, warning = FALSE}
 student_q7 <- data.frame(table(student[student$q7!='',]$q7))
 student_q7 <- student_q7[-1,]
 student_q7$Var1 <- factor(student_q7$Var1, levels = c("Often", "Sometimes", "Rarely", "Never"))
@@ -108,7 +110,7 @@ ggplot(student_q7) +
 ```
 
 #### Question 8: The virtual curriculum limited your ability to form social connections with your classmates.
-```{r}
+```{r, warning = FALSE}
 student_q8 <- data.frame(table(student[student$q8!='',]$q8))
 student_q8 <- student_q8[-1,]
 student_q8$Var1 <- factor(student_q8$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -126,7 +128,7 @@ ggplot(student_q8) +
 ```
 
 #### Question 9: The virtual curriculum affected your ability for self care.
-```{r}
+```{r, warning = FALSE}
 student_q9 <- data.frame(table(student[student$q9!='',]$q9))
 student_q9 <- student_q9[-1,]
 student_q9$Var1 <- factor(student_q9$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -144,7 +146,7 @@ ggplot(student_q9) +
 ```
 
 #### Question 10: Replacing clinical week experiences with virtual activities impacted the quality of your clinical skills education.
-```{r}
+```{r, warning = FALSE}
 student_q10 <- data.frame(table(student[student$q10!='',]$q10))
 student_q10 <- student_q10[-1,]
 student_q10$Var1 <- factor(student_q10$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -162,7 +164,7 @@ ggplot(student_q10) +
 ```
 
 #### Question 11: COVID-19 affected the extent of your involvement in community service during pre-clinical years.
-```{r}
+```{r, warning = FALSE}
 student_q11 <- data.frame(table(student[student$q11!='',]$q11))
 student_q11 <- student_q11[-1,]
 student_q11$Var1 <- factor(student_q11$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -180,7 +182,7 @@ ggplot(student_q11) +
 ```
 
 #### Question 12: Your choice of specialty will be affected due to virtual versus in-person interactions with instructors, lack of shadowing and research opportunities.
-```{r}
+```{r, warning = FALSE}
 student_q12 <- data.frame(table(student[student$q12!='',]$q12))
 student_q12 <- student_q12[-1,]
 student_q12$Var1 <- factor(student_q12$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -198,7 +200,7 @@ ggplot(student_q12) +
 ```
 
 #### Question 13: You were able to connect to students in other class years and instructors to identify potential mentors using the Zoom format.
-```{r}
+```{r, warning = FALSE}
 student_q13 <- data.frame(table(student[student$q13!='',]$q13))
 student_q13 <- student_q13[-1,]
 student_q13$Var1 <- factor(student_q13$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -216,7 +218,7 @@ ggplot(student_q13) +
 ```
 
 #### Question 14: I feel confident that I belong at UNC School of Medicine.
-```{r}
+```{r, warning = FALSE}
 student_q14 <- data.frame(table(student[student$q14!='',]$q14))
 student_q14 <- student_q14[-1,]
 student_q14$Var1 <- factor(student_q14$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -258,8 +260,10 @@ ggplot(student_q14) +
 
 
 ### 2.Word Maps for Open-ended Questions
+In this section, I analyze the open-ended questions. For each question, I use a word map to show the most frequent words that the respondents mentioned in the survey. The larger the words are, the more important they are (or more frequently appeared).
+
 #### Question 4: How interactive are lectures using the Zoom format?
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 student_q4 <- student$q4
 docs <- Corpus(VectorSource(student_q4))
@@ -286,7 +290,7 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 ```
 
 #### Question 5: How was the small group experience using the Zoom format?
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 student_q5 <- student$q5
 docs <- Corpus(VectorSource(student_q5))
@@ -313,7 +317,7 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 ```
 
 #### Question 15: If you did not feel a sense of belonging, please explain further
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 student_q15 <- student$q15
 docs <- Corpus(VectorSource(student_q15))
@@ -359,7 +363,9 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 
 
 ### 3. Dependency Table for Questions
-```{r}
+This table shows the level of dependency between each pair of the multiple-choice questions. The numbers here are p-values. If the value is smaller than 0.05, it means that the we reject the null hypothesis that the two questions are independent. This indicates the two questions are correlated with each other.
+
+```{r, warning = FALSE}
 student_cat <- apply(student[student$q1!="", c(3:5,8:16)], 2, as.character)
 p_value <- matrix(nrow = 12, ncol = 12)
 
@@ -394,7 +400,9 @@ for (i in 1:11) {
 
 
 ### 4. PCA Analysis
-```{r}
+The PCA analysis can show potential clusters inside the survey results. From PCA scores, we can see that all questions have similar contribution to PCA1, except for question 3. The figure also show that all questions other than question 3 are driving the scores into one direction (to the upper right corner). Thus, there is no obvious clusters from the PCA analysis.
+
+```{r, warning = FALSE}
 # change categorical variable to numeric
 student_num <- student[c(5,8:16)]
 levels(student_num$q3) <- c(0,3,4)
@@ -421,6 +429,7 @@ student_num$q14 <- as.numeric(student_num$q14)
 
 # Compute the Principal Components
 student_pca <- prcomp(student_num, center = TRUE,scale. = TRUE)
+student_pca
 
 # plot pca
 library(devtools)
@@ -447,9 +456,11 @@ ggbiplot(student_pca) + coord_equal(ratio = 0.4)
 
 
 ## Faculty Survey
+I did the same analysis for the faculty survey as what I did for the student survey. Results can bbe found in the following section.
+
 ### 1. Bar graph with 95% confidence interval
 #### Question 1: For your preclinical education, what is your preferred mode of teaching?
-```{r}
+```{r, warning = FALSE}
 faculty_q1 <- data.frame(table(faculty[faculty$q1!='',]$q1))
 faculty_q1$prop <- faculty_q1$Freq/sum(faculty_q1$Freq)
 faculty_q1$sd <- sqrt(faculty_q1$prop*(1-faculty_q1$prop)*faculty_q1$Freq)
@@ -463,7 +474,7 @@ ggplot(faculty_q1) +
 ```
 
 #### Question 6: How easy was it connecting with students in small groups over Zoom?
-```{r}
+```{r, warning = FALSE}
 faculty_q6 <- data.frame(table(faculty[faculty$q6!='',]$q6))
 faculty_q6$Var1 <- factor(faculty_q6$Var1, levels = c("Very easy", "Easy", 
                                                       "Neither difficult nor easy", "Difficult",
@@ -480,7 +491,7 @@ ggplot(faculty_q6) +
 ```
 
 #### Question 9: The virtual curriculum affected your ability for self care.
-```{r}
+```{r, warning = FALSE}
 faculty_q9 <- data.frame(table(faculty[faculty$q9!='',]$q9))
 faculty_q9 <- faculty_q9[-1,]
 faculty_q9$Var1 <- factor(faculty_q9$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -498,7 +509,7 @@ ggplot(faculty_q9) +
 ```
 
 #### Question 12: Your ability to help students explore your speciality was affected by virtual versus inperson interactions with students, lack of shadowing and research opportunities during COVID-19.
-```{r}
+```{r, warning = FALSE}
 faculty_q12 <- data.frame(table(faculty[faculty$q12!='',]$q12))
 faculty_q12 <- faculty_q12[-1,]
 faculty_q12$Var1 <- factor(faculty_q12$Var1, levels = c("Strongly agree", "Agree", "Neutral", 
@@ -537,7 +548,7 @@ ggplot(faculty_q12) +
 
 ### 2.Word Maps for Open-ended Questions
 #### Question 1 (if chose "Other") How interactive are lectures using the Zoom format?
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 faculty_q1_other <- faculty$q1_other
 docs <- Corpus(VectorSource(faculty_q1_other))
@@ -564,7 +575,7 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 
 
 #### Question 4: How interactive are lectures using the Zoom format?
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 faculty_q4 <- faculty$q4
 docs <- Corpus(VectorSource(faculty_q4))
@@ -591,7 +602,7 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 ```
 
 #### Question 12: If you felt that the ability to help students explore your specialty was affected, please explain further
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 faculty_q12_explain <- faculty$q12_explain
 docs <- Corpus(VectorSource(faculty_q12_explain))
@@ -617,7 +628,7 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 ```
 
 #### Question 16: Other comments
-```{r}
+```{r, warning = FALSE}
 # Retrieving the text data
 faculty_q16 <- faculty$q16
 docs <- Corpus(VectorSource(faculty_q16))
@@ -659,7 +670,8 @@ wordcloud(words = df$word, freq = df$freq, min.freq = 1, max.words=200, random.o
 
 
 ### 4. PCA Analysis
-```{r}
+Similar to the student survey, the PCA analysis does not find any obvious clusters from the survey results. The sample size and the number of questions inside the faculty survey are both small, so it is hard to detect.
+```{r, warning = FALSE}
 # change categorical variable to numeric
 faculty_num <- faculty[c(5:7)]
 levels(faculty_num$q6) <- c(0,1,2,3,4,5)
@@ -672,8 +684,10 @@ faculty_num$q12 <- as.numeric(faculty_num$q12)
 
 # Compute the Principal Components
 faculty_pca <- prcomp(faculty_num, center = TRUE,scale. = TRUE)
+faculty_pca 
 
 # plot pca
+library(ggbiplot)
 ggbiplot(faculty_pca) + coord_equal(ratio = 0.4)
 ```
 
@@ -694,9 +708,13 @@ ggbiplot(faculty_pca) + coord_equal(ratio = 0.4)
 
 
 ## Dependency between the Two Surveys
+In this section, I use different methods to analyze the relationship between the student and faculty surveys. We can know whether students and faculty have similar opinions on how pandemic influenced their academic activities and level of wellness.
+
 ### 1. Grouped Bar Plot on Common Questions
+I first used a grouped bar plot with the 95% confidence interval to check if students and faculty members chose the same option for a specific question. For each option, I use bars with different colors to show the ratio of students or faculty members who chose it. If the confidence intervals do not overlap, it means the ratio of students who chose this option is significantly different from the ratio of faculty members who chose it.
+
 #### Question 1
-```{r}
+```{r, warning = FALSE}
 merge_q1 <- rbind(student_q1, faculty_q1[-4,])
 merge_q1$category <- c(rep("student",4), rep("faculty",4))
 merge_q1$sd <- sqrt(merge_q1$prop*(1-merge_q1$prop)/merge_q1$Freq)
@@ -711,7 +729,7 @@ ggplot(merge_q1, aes(fill=category, y=prop, x=Var1)) +
 
 
 #### Question 6: How easy was it connecting with faculty/students in small groups over Zoom?
-```{r}
+```{r, warning = FALSE}
 merge_q6 <- rbind(student_q6, faculty_q6)
 de<-data.frame("Very difficult",0,0,0)
 names(de)<-c("Var1","Freq", "prop", "sd")
@@ -731,7 +749,7 @@ ggplot(merge_q6, aes(fill=category, y=prop, x=Var1)) +
 ```
 
 #### Question 9: The virtual curriculum affected your ability for self care.
-```{r}
+```{r, warning = FALSE}
 merge_q9 <- rbind(student_q9, faculty_q9)
 de<-data.frame("Agree",0,0,0)
 names(de)<-c("Var1","Freq", "prop", "sd")
@@ -751,7 +769,7 @@ ggplot(merge_q9, aes(fill=category, y=prop, x=Var1)) +
 ```
 
 #### Question 12: Your choice of specialt/your ability to help students explore your speciality was affected by virtual versus inperson interactions with instructors/students, lack of shadowing and research opportunities during COVID-19.
-```{r}
+```{r, warning = FALSE}
 merge_q12 <- rbind(student_q12, faculty_q12)
 de<-data.frame("Agree",0,0,0)
 names(de)<-c("Var1","Freq", "prop", "sd")
@@ -790,9 +808,11 @@ ggplot(merge_q12, aes(fill=category, y=prop, x=Var1)) +
 
 
 ### 2. Hypothesis Testing: Do the answers from students and faculty members differ?
+Then I use hypothesis testing to check the mean difference of each questions between students and faculty members. I first transfer the answers of each multiple-choice question into numbers, and then calculate the average value of each question. Finally, I can use hypothesis testing to detect any the differences between student and faculty surveys. If the p-value in a test is smaller than 0.05, it shows that the mean value of a question in student survey is significantly different from the faculty survey.
+
 ### 2-1: Non parametric test of mean difference
 #### Question 1
-```{r}
+```{r, warning = FALSE}
 # get common questions in student survey that are categorical & change it to numeric
 student_common <- student[,c(3,8,11,14)]
 levels(student_common$q1) <- c(0,1,2,3,4)
@@ -822,16 +842,16 @@ wilcox.test(student_common$q1, faculty_common$q1, alternative = "two.sided")
 ```
 
 #### Question 6
-```{r}
+```{r, warning = FALSE}
 wilcox.test(student_common$q6, faculty_common$q6, alternative = "two.sided")
 ```
 
 #### Question 9
-```{r}
+```{r, warning = FALSE}
 wilcox.test(student_common$q9, faculty_common$q9, alternative = "two.sided")
 ```
 
 #### Question 12
-```{r}
+```{r, warning = FALSE}
 wilcox.test(student_common$q12, faculty_common$q12, alternative = "two.sided")
 ```
